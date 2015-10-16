@@ -1,0 +1,122 @@
+/* CSS */
+
+label{
+	border-radius: 5px !important;
+	margin-bottom: 15px !important;
+}
+
+button{
+	border-radius: 5px !important;
+}
+
+/*surcharge des lib CSS ionic.css*/
+
+.item-content{
+  background-color: #3f4041 !important;
+  color: #fff !important;
+}
+
+.menu{
+  background-color: #3f4041 !important;
+}
+
+
+/*style des elements de l'applcation*/
+/*--Regle general-*/
+.center{
+	text-align: center;
+}
+
+/*--Header home.html--*/
+.header{
+	padding: 17px;
+	color: #FFF;
+	background-color: #387EF5;
+	width: 100%;
+	height: auto;
+}
+
+#imgProfil{
+	width: 25px;
+	height: 25px;
+	margin-top: 4px;
+	margin-right: 5px;
+}
+
+#imgProfil:hover{
+	opacity: 0.5;
+}
+
+.menuIcon{
+	width: 10%;
+	margin: 13px 3% 0 3%
+}
+
+.menuIcon:hover {
+	opacity: 0.5;
+}
+/*--Fin Header home.html--*/
+
+/*--Style calendrier honme.html--*/
+#calendrier{
+	color: #000;
+}
+
+#calendrier img{
+	width: 100%;
+}
+/*--Fin Style calendrier honme.html--*/
+
+/*--Style side-menu index.html--*/
+#miniature{
+	width: 25%;
+	margin-left: 38%;
+}
+
+#menuMiniature{
+	margin-top: 20px;
+	width: 25%;
+}
+
+.separateur{
+	width: 75%;
+	height: 1px;
+	margin-top: -20px;
+}
+
+#name{
+	color: #FFF;
+	width: 150px;
+	border-top: 2px solid;
+	padding: 10px 0px 30px 1px;
+	margin-left: 63px;
+	border-radius: 2px;
+	webkit-border-radius: 2px;
+}
+
+#mentions{
+	text-decoration: none;
+	color: #FFF;
+	position: absolute;
+	bottom: 10px;
+	left: 70px;
+}
+/*--Fin Style side-menu index.html--*/
+
+/*--Style cloud.html--*/
+#cloudContent{
+	color: #000;
+}
+/*--Fin Style cloud.html--*/
+
+
+/*--Style login.html--*/
+#loginContent{
+	background-color: #387EF5;
+	color: #FFF !important;
+}
+
+.menuIconLogin{
+	width: 27%;
+	margin: 35px 0% 40px;
+}
