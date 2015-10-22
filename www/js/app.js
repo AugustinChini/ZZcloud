@@ -13,14 +13,12 @@ appZZcloud.run(function($ionicPlatform, $http) {
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+
     }
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
   });
-
-
-  $http.defaults.headers.common.Authorization = 'Basic ' + btoa("augustin" + ':' + "saucisse<3");
 
 });
 
