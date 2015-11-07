@@ -24,36 +24,72 @@ appZZcloud.run(function($ionicPlatform, $http) {
 
 appZZcloud.config(function($stateProvider, $urlRouterProvider){
 
-    $stateProvider.state('home', {
+    $stateProvider.state('side', {
+      url: "/side",
+      abstract: true,
+      templateUrl: "templates/side.html"
+    });
+
+    $stateProvider.state('container', {
+      url: "/container",
+      abstract: true,
+      templateUrl: "templates/container.html"
+    });
+
+    $stateProvider.state('side.home', {
       url: "/home",
-      templateUrl: "templates/home.html"
+      views: {
+        'home-side': {
+          templateUrl: "templates/home.html"
+        }
+      }
     });
-    
-    $stateProvider.state('cloud', {
+
+    $stateProvider.state('side.cloud', {
       url: "/cloud",
-      templateUrl: "templates/cloud.html",
-      controller: 'getWebDavContent'
+      views: {
+        'home-side': {
+          templateUrl: "templates/cloud.html",
+          controller: 'getWebDavContent'
+        }
+      }
     });
 
-    $stateProvider.state('cal', {
-      url: "/calendrier",
-      templateUrl: "templates/calendrier.html"
+    $stateProvider.state('side.calendar', {
+      url: "/calendar",
+      views: {
+        'home-side': {
+          templateUrl: "templates/calendar.html"
+        }
+      }
     });
 
-    $stateProvider.state('notes', {
+    $stateProvider.state('side.notes', {
       url: "/notes",
-      templateUrl: "templates/notes.html"
+      views: {
+        'home-side': {
+          templateUrl: "templates/notes.html"
+        }
+      }
     });
 
-    $stateProvider.state('profil', {
-      url: "/profil",
-      templateUrl: "templates/profil.html"
+    $stateProvider.state('side.profile', {
+      url: "/profile",
+      views: {
+        'home-side': {
+          templateUrl: "templates/profile.html"
+        }
+      }
     });
 
-    $stateProvider.state('login', {
+    $stateProvider.state('container.login', {
       url: "/login",
-      templateUrl: "templates/login.html"
+      views: {
+        'container-login': {
+          templateUrl: "templates/login.html"
+        }
+      }
     });
 
-    $urlRouterProvider.otherwise("/login");
+    $urlRouterProvider.otherwise("/container/login");
 });
