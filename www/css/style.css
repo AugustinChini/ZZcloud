@@ -107,6 +107,19 @@ button{
 #cloudContent{
 	color: #000;
 }
+
+.item
+{
+	border-color: #387EF5 !important;
+	border-top-width: 1px !important;
+	border-top-style: solid !important;
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+}
+
+
+
 /*--Fin Style cloud.html--*/
 
 

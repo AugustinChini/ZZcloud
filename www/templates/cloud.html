@@ -1,8 +1,20 @@
 <ion-view view-title="ZZcloud">
     <ion-content class="padding">
-    	<div id="cloudContent">
-	        <p><strong>{{arbo}}</strong></p>
-	        <button ng-click="webDavRequest()">coucou</button>
+        <div id="cloudContent">
+
+            <a ng-repeat="item in arrayItems" class="item item-icon-left item-icon-right" href="#">
+                <i class="icon ion-document"></i>
+                {{item.name}}
+                    <span class="item-note">
+                        {{item.date.day+'/'+item.date.month+'/'+item.date.year}} <br/> {{item.size}}
+                    </span>
+            </a>
+
+            <p>
+                <strong>{{arbo}}</strong>
+            </p>
+
+            <button ng-click="webDavRequest()">coucou</button>
         </div>
     </ion-content>
 </ion-view>

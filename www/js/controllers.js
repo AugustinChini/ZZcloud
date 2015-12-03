@@ -6,7 +6,7 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
             }
         };
         $http.get("http://achini.ddns.net/owncloud/remote.php/webdav/", config).then(function(response) {
-            $scope.arbo = htmlToJsonParser(response.data);
+            $scope.arrayItems = htmlToJsonParser(response.data);
         }, function(error) {
             $scope.arbo = error;
         });
