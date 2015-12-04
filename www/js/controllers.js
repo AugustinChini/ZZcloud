@@ -16,8 +16,8 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
     function Item(name, link, type, size, date) {
         this.name = name;
         this.link = link;
-        this.type = type; //en octets
-        this.size = size;
+        this.type = type; 
+        this.size = size;//en octets
         this.date = date;
     }
 

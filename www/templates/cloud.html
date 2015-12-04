@@ -1,14 +1,31 @@
 <ion-view view-title="ZZcloud">
-    <ion-content class="padding">
+    <ion-content >
         <div id="cloudContent">
 
-            <a ng-repeat="item in arrayItems" class="item item-icon-left item-icon-right" href="#">
-                <i class="icon ion-document"></i>
-                {{item.name}}
+            <div id="folderTree" class="item item-icon-left">
+                <i class="icon ion-home"></i>
+                <p id="node"><img src="img/arrow.jpg"><span>ISIMA</span></p>
+                <p id="node"><img src="img/arrow.jpg"><span>C++</span></p>
+                <p id="node"><img src="img/arrow.jpg"><span>TP4</span></p>
+            </div>
+            <ion-list >
+                <ion-item ng-repeat="item in arrayItems" id="cloudItem" class="item item-icon-left item-icon-right" href="#">
+                    
+                    <i ng-if="item.type != 'Collection'" class="icon ion-document"></i>
+                    <i ng-if="item.type == 'Collection'" class="icon ion-folder"></i>
+                    {{item.name}}
                     <span class="item-note">
-                        {{item.date.day+'/'+item.date.month+'/'+item.date.year}} <br/> {{item.size}}
+                        {{item.date.day+'/'+item.date.month+'/'+item.date.year}} - {{item.size}}
                     </span>
-            </a>
+
+                    <ion-option-button class="button-positive">
+                      Share
+                    </ion-option-button>
+                    <ion-option-button class="button-assertive">
+                      Edit
+                    </ion-option-button>
+                </ion-item>
+            </ion-list >
 
             <p>
                 <strong>{{arbo}}</strong>

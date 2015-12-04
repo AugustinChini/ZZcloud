@@ -11,13 +11,13 @@ button{
 
 /*surcharge des lib CSS ionic.css*/
 
-.item-content{
+#sideMenu .item-content{
   background-color: #3f4041 !important;
   color: #fff !important;
 }
 
-.menu{
-  background-color: #3f4041 !important;
+#sideMenu{
+  background-color: #3f4041;
 }
 
 
@@ -108,17 +108,70 @@ button{
 	color: #000;
 }
 
-.item
+#cloudItem
 {
 	border-color: #387EF5 !important;
-	border-top-width: 1px !important;
-	border-top-style: solid !important;
-	border-bottom: none;
+	border-bottom-width: 1px !important;
+	border-bottom-style: solid !important;
+	border-top: none;
 	border-left: none;
 	border-right: none;
+	margin-bottom: 2px;
 }
 
+#cloudItem i
+{
+	height: 60px;
+}
 
+.item-note
+{
+	float: left !important;
+	color: #AAA !important;
+	font-size: 11px !important;
+	margin-left: 18px;
+	font-size: 13px;
+}
+
+#folderTree
+{
+	width: 100%;
+	height: 50px;
+	border: none;
+	-webkit-box-shadow: 0 0 8px 0 #4A4747;
+	box-shadow: 0 0 8px 0 #4A4747;
+	margin-bottom: 15px;
+}
+
+#folderTree i
+{
+	height: 50px;
+	padding-left: 8px;
+}
+
+#node
+{
+	float: left;
+	margin-left: 20px;
+	margin-top: -3px;
+	font-size: 18px;
+}
+
+#node img
+{
+	margin-top: -3px;
+	position: fixed;
+}
+
+#node span
+{
+	margin-left: 30px;
+}
+
+.nodeItem
+{
+	margin-top: 10px;
+}
 
 /*--Fin Style cloud.html--*/
 
