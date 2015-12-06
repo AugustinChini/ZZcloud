@@ -13,9 +13,13 @@
                     
                     <i ng-if="item.type != 'Collection'" class="icon ion-document"></i>
                     <i ng-if="item.type == 'Collection'" class="icon ion-folder"></i>
-                    {{item.name}}
-                    <span class="item-note">
-                        {{item.date.day+'/'+item.date.month+'/'+item.date.year}} - {{item.size}}
+                    {{item.name}}<br/>
+                    <span ng-if="item.size == ''" class="item-note">
+                        {{item.date.day+'/'+item.date.month+'/'+item.date.year}}
+                    </span>
+
+                    <span ng-if="item.size != ''" class="item-note">
+                        {{item.date.day+'/'+item.date.month+'/'+item.date.year}} - {{item.size}}o
                     </span>
 
                     <ion-option-button class="button-positive">

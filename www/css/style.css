@@ -121,7 +121,7 @@ button{
 
 #cloudItem i
 {
-	height: 60px;
+	height: 50px;
 }
 
 .item-note
@@ -130,6 +130,7 @@ button{
 	color: #AAA !important;
 	font-size: 11px !important;
 	margin-left: 18px;
+	margin-top: 3px;
 	font-size: 13px;
 }
 

@@ -5,7 +5,7 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
                 'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
             }
         };
-        $http.get("http://achini.ddns.net/owncloud/remote.php/webdav/", config).then(function(response) {
+        $http.get("http://achini.ddns.net/owncloud/remote.php/webdav/ISIMA/", config).then(function(response) {
             $scope.arrayItems = htmlToJsonParser(response.data);
         }, function(error) {
             $scope.arbo = error;
@@ -39,7 +39,7 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
         //index 0 is empty, 1 is the first row (titles)
         for(i=2;i<rows.length;i++) {
             var cells = rows[i].split('<td');
-            if(cells.length >= 6) {
+            if(cells.length >= 6 && (cells[2]).indexOf(">..<") == -1) {
                 var link = cells[2].split('<a href="')[1].split('"')[0];
                 var name = cells[2].split(link+'">')[1].split("</a>")[0];
                 var type = cells[3].split('>')[1].split('</td')[0];
@@ -51,6 +51,7 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
                 var item = new Item(name, link, type, size, date);
 
                 arrayItems.push(item);
+            
             }
         }
             
@@ -58,14 +59,27 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
     }
 
     function parseDateToFrenchFormat(dateStr) {
-        var day = dateStr.split("-")[2].split("T")[0];
-        var month = dateStr.split("-")[1];
-        var year = dateStr.split("-")[0];
-        var hour = dateStr.split("T")[1].split(":")[0];
-        var minutes = dateStr.split(":")[1];
-        var seconds = dateStr.split(":")[2].split("+")[0];
 
-        var date = new DateObject(day, month, year, hour, minutes, seconds);
+        var date;
+        var month;
+        var year;
+        var day;
+        var hour;
+        var minutes;
+        var seconds;
+
+        if(dateStr != "")
+        {
+             day = dateStr.split("-")[2].split("T")[0];
+             month = dateStr.split("-")[1];
+             year = dateStr.split("-")[0];
+             hour = dateStr.split("T")[1].split(":")[0];
+             minutes = dateStr.split(":")[1];
+             seconds = dateStr.split(":")[2].split("+")[0];
+    
+        }
+        
+        date = new DateObject(day, month, year, hour, minutes, seconds);
 
         return date;
     }
