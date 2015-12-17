@@ -1,18 +1,44 @@
 appZZcloud.controller('getWebDavContent', function($scope, $http) {
-    $scope.webDavRequest = function(){
+
+    $scope.init = function(){
+
+        $scope.showDelete = false;
+
+        $scope.webDavRequest("/");
+    }
+
+    $scope.shouldShowDelete = function(){
+
+        if($scope.showDelete)
+        {
+            $scope.showDelete = false;
+        }
+        else{
+
+            $scope.showDelete = true;
+        }
+
+        return $scope.showDelete;
+
+    }
+
+    $scope.webDavRequest = function(path){
 
         var config = {headers:  {
                 'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
             }
         };
+<<<<<<< HEAD
+        $http.get("http://achini.ddns.net/owncloud/remote.php/webdav"+path, config).then(function(response) {
+=======
         $http.get("http://achini.ddns.net/owncloud/remote.php/webdav/ISIMA/", config).then(function(response) {
+>>>>>>> 8d0265d227710dad2358eb64137af5a3f12b9bb4
             $scope.arrayItems = htmlToJsonParser(response.data);
         }, function(error) {
             $scope.arbo = error;
         });
     }
-
-    //Class Item to each file/folder read by a parser when GET request is performed
+ //Class Item to each file/folder read by a parser when GET request is performed
     function Item(name, link, type, size, date) {
         this.name = name;
         this.link = link;
@@ -83,4 +109,7 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
 
         return date;
     }
+
+
+    $scope.init();
 });

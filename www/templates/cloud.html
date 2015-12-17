@@ -4,12 +4,16 @@
 
             <div id="folderTree" class="item item-icon-left">
                 <i class="icon ion-home"></i>
-                <p id="node"><img src="img/arrow.jpg"><span>ISIMA</span></p>
-                <p id="node"><img src="img/arrow.jpg"><span>C++</span></p>
-                <p id="node"><img src="img/arrow.jpg"><span>TP4</span></p>
+                <p id="node"><img src="img/arrow.png"><span>ISIMA</span></p>
+                <p id="node"><img src="img/arrow.png"><span>C++</span></p>
+                <p id="node"><img src="img/arrow.png"><span>TP4</span></p>
+                <button id="deleteButton" ng-click="shouldShowDelete()"><img src="img/trash.png"/></button>
             </div>
-            <ion-list >
-                <ion-item ng-repeat="item in arrayItems" id="cloudItem" class="item item-icon-left item-icon-right" href="#">
+
+            
+
+            <ion-list show-delete="showDelete">
+                <ion-item ng-click="alert();" ng-repeat="item in arrayItems" id="cloudItem" class="item item-icon-left item-icon-right" href="#">
                     
                     <i ng-if="item.type != 'Collection'" class="icon ion-document"></i>
                     <i ng-if="item.type == 'Collection'" class="icon ion-folder"></i>
@@ -28,14 +32,15 @@
                     <ion-option-button class="button-assertive">
                       Edit
                     </ion-option-button>
+
+                    <ion-delete-button class="ion-minus-circled"></ion-delete-button>
                 </ion-item>
             </ion-list >
-
             <p>
                 <strong>{{arbo}}</strong>
             </p>
 
-            <button ng-click="webDavRequest()">coucou</button>
+            <button ng-click="webDavRequest('/ISIMA/')">coucou</button>
         </div>
     </ion-content>
 </ion-view>
