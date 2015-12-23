@@ -1,12 +1,14 @@
-appZZcloud.controller('getWebDavContent', function($scope, $http) {
+appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDelegate) {
 
+    // init of the cloud controller
     $scope.init = function(){
 
         $scope.showDelete = false;
 
-        $scope.webDavRequest("/");
+        $scope.getTree("/");
     }
 
+    // should we show the delete button ?
     $scope.shouldShowDelete = function(){
 
         if($scope.showDelete)
@@ -22,22 +24,67 @@ appZZcloud.controller('getWebDavContent', function($scope, $http) {
 
     }
 
-    $scope.webDavRequest = function(path){
 
-        var config = {headers:  {
+
+    /*
+     * ---- HTTP reqests ----
+     */
+
+    $scope.webDavRequest = function(type, name){
+    
+        if (type == "Collection") {
+            $scope.goToNode(name);
+            $scope.getTree(name);
+        }
+        else
+            alert("files are not supported ... yet");
+    }
+
+    $scope.getTree = function (name) {
+
+        if (name != '/')
+            name = "/" + $scope.tree.join('/');
+        else
+            $scope.tree = [];
+
+        var config = {
+            headers: {
                 'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
             }
         };
-<<<<<<< HEAD
-        $http.get("http://achini.ddns.net/owncloud/remote.php/webdav"+path, config).then(function(response) {
-=======
-        $http.get("http://achini.ddns.net/owncloud/remote.php/webdav/ISIMA/", config).then(function(response) {
->>>>>>> 8d0265d227710dad2358eb64137af5a3f12b9bb4
+        $http.get("http://192.168.1.25/owncloud/remote.php/webdav" + name, config).then(function (response) {
             $scope.arrayItems = htmlToJsonParser(response.data);
-        }, function(error) {
-            $scope.arbo = error;
+            $ionicScrollDelegate.scrollTop(true);
+        }, function (error) {
+
+            // change and use ionic popup to show errors
+            alert(error);
         });
     }
+
+    $scope.tree = [];
+
+    $scope.goToNode = function (node) {
+
+        var find = false;
+
+        for(var i = 0; i<$scope.tree.length; ++i)
+        {
+            if (node == $scope.tree[i])
+            {
+                $scope.tree.splice(i + 1);
+                find = true;
+                break;
+            }
+        }
+
+        if(!find)
+        {
+            $scope.tree.push(node);
+        }
+
+    }
+
  //Class Item to each file/folder read by a parser when GET request is performed
     function Item(name, link, type, size, date) {
         this.name = name;

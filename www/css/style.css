@@ -153,9 +153,9 @@ button{
 #node
 {
 	float: left;
-	margin-left: 20px;
+	margin-left: 0px;
 	margin-top: -3px;
-	font-size: 18px;
+	font-size: 15px;
 }
 
 #node img
@@ -166,7 +166,7 @@ button{
 
 #node span
 {
-	margin-left: 30px;
+	margin-left: 20px;
 }
 
 .nodeItem
@@ -177,8 +177,9 @@ button{
 #deleteButton
 {
 	float: right;
-	margin-top: -5px;
+	margin-top: -6px;
 	border: medium none;
+    background-color: #FFF;
 }
 
 #deleteButton img

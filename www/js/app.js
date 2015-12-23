@@ -50,7 +50,7 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider){
       views: {
         'home-side': {
           templateUrl: "templates/cloud.html",
-          controller: 'getWebDavContent'
+          controller: 'cloudController'
         }
       }
     });
