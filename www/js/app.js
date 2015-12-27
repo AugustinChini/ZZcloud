@@ -77,7 +77,8 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider){
       url: "/profile",
       views: {
         'home-side': {
-          templateUrl: "templates/profile.html"
+          templateUrl: "templates/profile.html",
+          controller: "profileController"
         }
       }
     });

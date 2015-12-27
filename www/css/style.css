@@ -153,7 +153,7 @@ button{
 #node
 {
 	float: left;
-	margin-left: 0px;
+	margin-left: 5px;
 	margin-top: -3px;
 	font-size: 15px;
 }
@@ -166,7 +166,7 @@ button{
 
 #node span
 {
-	margin-left: 20px;
+	margin-left: 25px;
 }
 
 .nodeItem

@@ -1,11 +1,19 @@
-appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDelegate) {
+appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading) {
+
+    $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
+
+    $scope.headerConfig = {
+        headers: {
+            'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
+        }
+    };
 
     // init of the cloud controller
     $scope.init = function(){
 
         $scope.showDelete = false;
 
-        $scope.getTree("/");
+        $scope.displayTree("/");
     }
 
     // should we show the delete button ?
@@ -25,6 +33,22 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
     }
 
 
+    // confirm dialog
+    $scope.showConfirm = function(name) {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Enregistement',
+            template: 'Voulez-vous télècharger ce fichier et l\'enregister ?'
+        });
+
+        confirmPopup.then(function(res) {
+            if(res) {
+                
+                // call the function to download the file
+                $scope.download(name, $scope.urlBase + "/" + $scope.tree.join('/'));
+
+            }
+        });
+    };
 
     /*
      * ---- HTTP reqests ----
@@ -34,25 +58,24 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
     
         if (type == "Collection") {
             $scope.goToNode(name);
-            $scope.getTree(name);
+            $scope.displayTree(name);
         }
         else
-            alert("files are not supported ... yet");
+        {
+            
+            $scope.showConfirm(name);
+
+        }
     }
 
-    $scope.getTree = function (name) {
+    $scope.displayTree = function (name) {
 
         if (name != '/')
             name = "/" + $scope.tree.join('/');
         else
             $scope.tree = [];
 
-        var config = {
-            headers: {
-                'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
-            }
-        };
-        $http.get("http://192.168.1.25/owncloud/remote.php/webdav" + name, config).then(function (response) {
+        $http.get($scope.urlBase + name, $scope.headerConfig).then(function (response) {
             $scope.arrayItems = htmlToJsonParser(response.data);
             $ionicScrollDelegate.scrollTop(true);
         }, function (error) {
@@ -84,6 +107,63 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
         }
 
     }
+
+    $scope.download = function(name, url) {
+
+        $ionicLoading.show({template: 'Loading...'});
+
+        document.addEventListener("deviceready", function() {
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
+                fs.root.getDirectory(
+                    "ZZcloud/data",
+                    {
+                        create: true
+                    },
+                    function(dirEntry) {
+                        dirEntry.getFile(
+                            name, 
+                            {
+                                create: true, 
+                                exclusive: false
+                            }, 
+                            function gotFileEntry(fe) {
+                                var p = fe.toURL();
+                                fe.remove();
+                                ft = new FileTransfer();
+                                ft.download(
+
+                                    //URL
+                                    encodeURI(url+'/'+name),
+
+                                    // file path
+                                    p,
+                                    function(entry) {
+                                        $ionicLoading.hide();
+                                        alert(entry.toURL());
+                                    },
+                                    function(error) {
+                                        $ionicLoading.hide();
+                                        alert("Download Error Source -> " + error.source);
+                                    },
+                                    false,
+                                    $scope.headerConfig
+                                );
+                            }, 
+                            function() {
+                            $ionicLoading.hide();
+                            console.log("Get file failed");
+                            }
+                        );
+                    }
+                );
+            },
+            function() {
+            $ionicLoading.hide();
+            console.log("Request for filesystem failed");
+            }); 
+        });
+    }
+
 
  //Class Item to each file/folder read by a parser when GET request is performed
     function Item(name, link, type, size, date) {
@@ -157,6 +237,17 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
         return date;
     }
 
+
+    $scope.init();
+});
+
+appZZcloud.controller('profileController', function ($scope, $ionicLoading) {
+
+    // init of the cloud controller
+    $scope.init = function(){
+
+        
+    }
 
     $scope.init();
 });
