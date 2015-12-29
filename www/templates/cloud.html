@@ -4,7 +4,7 @@
 
             <div id="folderTree" class="item item-icon-left">
                 <p ng-click="getTree('/')"><i class="icon ion-home"></i></p>
-                <p ng-repeat="node in tree" id="node"><img src="img/arrow.png"><span ng-click="webDavRequest('Collection', '{{node}}')">{{node}}</span></p>
+                <p ng-repeat="node in tree" id="node"><img src="img/arrow.jpg"><span ng-click="webDavRequest('Collection', '{{node}}')">{{node}}</span></p>
                 <button id="deleteButton" ng-click="shouldShowDelete()"><img src="img/trash.png"/></button>
             </div>
 

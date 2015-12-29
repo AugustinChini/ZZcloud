@@ -1,4 +1,4 @@
-appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading) {
+appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
 
     $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
 
@@ -113,59 +113,63 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
         $ionicLoading.show({template: 'Loading...'});
 
         document.addEventListener("deviceready", function() {
-            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
-                fs.root.getDirectory(
-                    "ZZcloud/data",
-                    {
-                        create: true
-                    },
-                    function(dirEntry) {
-                        dirEntry.getFile(
-                            name, 
-                            {
-                                create: true, 
-                                exclusive: false
-                            }, 
-                            function gotFileEntry(fe) {
-                                var p = fe.toURL();
-                                fe.remove();
-                                ft = new FileTransfer();
-                                ft.download(
 
-                                    //URL
-                                    encodeURI(url+'/'+name),
+            // only in android FS IOS --> documentDirectory
+            var targetPath = cordova.file.externalRootDirectory + "Download/" + name;
+            var trustHosts = true;
 
-                                    // file path
-                                    p,
-                                    function(entry) {
-                                        $ionicLoading.hide();
-                                        alert(entry.toURL());
-                                    },
-                                    function(error) {
-                                        $ionicLoading.hide();
-                                        alert("Download Error Source -> " + error.source);
-                                    },
-                                    false,
-                                    $scope.headerConfig
-                                );
-                            }, 
-                            function() {
-                            $ionicLoading.hide();
-                            console.log("Get file failed");
-                            }
-                        );
-                    }
-                );
-            },
-            function() {
-            $ionicLoading.hide();
-            console.log("Request for filesystem failed");
-            }); 
+            $cordovaFileTransfer.download(url+'/'+name, targetPath, $scope.headerConfig, trustHosts)
+            .then(function(result) {
+
+                setTimeout(function(){ $ionicLoading.hide(); }, 300);
+                $scope.fileOpener(name, targetPath);
+
+            }, function(err) {
+
+                alert('error: ' + JSON.stringify(err));
+                setTimeout(function(){ $ionicLoading.hide(); }, 300);
+
+            }, function (progress) {
+
+                $timeout(function () {
+
+                    // display % of download
+                    $ionicLoading.show({template: "Loading : "+((progress.loaded / progress.total) * 100).toFixed(1)+" %"});
+
+                })
+
+            });
+
         });
-    }
+
+    };
+
+    $scope.fileOpener = function (name, path)
+    {
+        // Set array of extentions
+        textFiles = ["txt", "md", "c", "h", "hpp", "cpp", "java", "conf", "sh", "hxx"];
+
+        appFiles = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "psd", "eps", "ai"];
+
+        imgFiles = ["jpg", "JPG", "png", "PNG", "jpeg", "JPEG", "svg"];
+
+        name = name.split(".");
+
+        var ext = name[name.length-1];
+
+        $cordovaFileOpener2.open(
+            path,
+            'application/'+ext
+        ).then(function() {
+            console.log('Success');
+        }, function(err) {
+            alert('You haven\'t the default application to open this file. It was saved to your \'Download\' folder.');
+        });
+
+    };
 
 
- //Class Item to each file/folder read by a parser when GET request is performed
+    // Class Item to each file/folder read by a parser when GET request is performed
     function Item(name, link, type, size, date) {
         this.name = name;
         this.link = link;

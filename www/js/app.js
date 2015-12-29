@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-var appZZcloud = angular.module('starter', ['ionic'])
+var appZZcloud = angular.module('starter', ['ionic', 'ngCordova'])
 
 appZZcloud.run(function($ionicPlatform, $http) {
 
