@@ -59,12 +59,16 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
     $scope.webDavRequest = function(type, name){
     
         if (type == "Collection") {
+
+            // Maj the tree bar
             $scope.goToNode(name);
+
+            // display the content of the folder
             $scope.displayTree(name);
         }
         else
         {
-            
+            // show confirm box and download the file
             $scope.showConfirm(name);
 
         }
@@ -282,7 +286,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
 appZZcloud.controller('profileController', function ($scope, $ionicLoading) {
 
-    // init of the cloud controller
+    // init of the profile controller
     $scope.init = function(){
 
         
@@ -293,7 +297,7 @@ appZZcloud.controller('profileController', function ($scope, $ionicLoading) {
 
 appZZcloud.controller('imgReaderController', function ($scope, $stateParams) {
 
-    // init of the cloud controller
+    // init of the imgReaderController controller
     $scope.init = function(){
 
         $scope.img = $stateParams.img;
@@ -304,7 +308,7 @@ appZZcloud.controller('imgReaderController', function ($scope, $stateParams) {
 
 appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
 
-    // init of the cloud controller
+    // init of the textReaderController controller
     $scope.init = function(){
 
         $scope.txt = $stateParams.txt;

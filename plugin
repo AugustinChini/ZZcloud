@@ -1,2 +1,0 @@
-cordova plugin add https://github.com/apache/cordova-plugin-whitelist.git
-cordova plugin add org.apache.cordova.file-transfer
