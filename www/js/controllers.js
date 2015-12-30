@@ -1,10 +1,12 @@
-appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
+appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
 
-    $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
+    $scope.urlBase = "http://192.168.1.25/owncloud/remote.php/webdav";
+    /*$scope.urlBase = "https://clown.isima.fr/clown/remote.php/webdav/";*/
 
     $scope.headerConfig = {
         headers: {
             'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
+            /*'Authorization': 'Basic Y2hpbmlhdWc6NTMyOTUzMjk='*/
         }
     };
 
@@ -147,9 +149,7 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
     $scope.fileOpener = function (name, path)
     {
         // Set array of extentions
-        textFiles = ["txt", "md", "c", "h", "hpp", "cpp", "java", "conf", "sh", "hxx"];
-
-        appFiles = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "psd", "eps", "ai"];
+        textFiles = ["txt", "md", "c", "h", "hpp", "cpp", "java", "conf", "sh", "hxx", "php", "js", "css"];
 
         imgFiles = ["jpg", "JPG", "png", "PNG", "jpeg", "JPEG", "svg"];
 
@@ -157,14 +157,49 @@ appZZcloud.controller('cloudController', function ($scope, $http, $ionicScrollDe
 
         var ext = name[name.length-1];
 
-        $cordovaFileOpener2.open(
-            path,
-            'application/'+ext
-        ).then(function() {
-            console.log('Success');
-        }, function(err) {
-            alert('You haven\'t the default application to open this file. It was saved to your \'Download\' folder.');
-        });
+        if (textFiles.indexOf(ext) > -1)
+        {
+            // go to textReader
+            window.resolveLocalFileSystemURL(path, gotFile, fail);
+
+            function fail(e) {
+                alert("error : could not read this file.");
+            }
+
+            function gotFile(fileEntry) {
+
+                fileEntry.file(function(file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function(e) {
+
+                        $state.go('side.textReader', { txt: this.result});
+
+                    }
+
+                    reader.readAsText(file);
+                });
+
+            }
+        }
+        else if (imgFiles.indexOf(ext) > -1)
+        {
+            // go to imgReader
+            $state.go('side.imgReader', { img: path});
+        }
+        else
+        {
+
+            // it's probably an app
+            $cordovaFileOpener2.open(
+                path,
+                'application/'+ext
+            ).then(function() {
+                console.log('Success');
+            }, function(err) {
+                alert('You haven\'t the default application to open this file. It was saved to your \'Download\' folder.');
+            });
+        }
 
     };
 
@@ -251,6 +286,28 @@ appZZcloud.controller('profileController', function ($scope, $ionicLoading) {
     $scope.init = function(){
 
         
+    }
+
+    $scope.init();
+});
+
+appZZcloud.controller('imgReaderController', function ($scope, $stateParams) {
+
+    // init of the cloud controller
+    $scope.init = function(){
+
+        $scope.img = $stateParams.img;
+    }
+
+    $scope.init();
+});
+
+appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
+
+    // init of the cloud controller
+    $scope.init = function(){
+
+        $scope.txt = $stateParams.txt;
     }
 
     $scope.init();

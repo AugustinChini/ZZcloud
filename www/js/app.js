@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 
-var appZZcloud = angular.module('starter', ['ionic', 'ngCordova'])
+var appZZcloud = angular.module('starter', ['ionic', 'ngCordova', 'hljs'])
 
 appZZcloud.run(function($ionicPlatform, $http) {
 
@@ -22,7 +22,7 @@ appZZcloud.run(function($ionicPlatform, $http) {
 
 });
 
-appZZcloud.config(function($stateProvider, $urlRouterProvider){
+appZZcloud.config(function($stateProvider, $urlRouterProvider, hljsServiceProvider){
 
     $stateProvider.state('side', {
       url: "/side",
@@ -83,6 +83,28 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider){
       }
     });
 
+    $stateProvider.state('side.textReader', {
+      url: "/textReader",
+      params: {'txt': "Error this page need text entry ..."},
+      views: {
+        'home-side': {
+          templateUrl: "templates/textReader.html",
+          controller: "textReaderController"
+        }
+      }
+    });
+
+    $stateProvider.state('side.imgReader', {
+      url: "/imgReader",
+      params: {'img': "img/ionic.png"},
+      views: {
+        'home-side': {
+          templateUrl: "templates/imgReader.html",
+          controller: "imgReaderController"
+        }
+      }
+    });
+
     $stateProvider.state('container.login', {
       url: "/login",
       views: {
@@ -93,4 +115,10 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider){
     });
 
     $urlRouterProvider.otherwise("/container/login");
+
+    // text editor config
+    hljsServiceProvider.setOptions({
+      // replace tab with 2 spaces
+      tabReplace: '    '
+    });
 });
