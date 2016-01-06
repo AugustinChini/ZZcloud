@@ -1,6 +1,6 @@
 appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
 
-    $scope.urlBase = "http://192.168.1.25/owncloud/remote.php/webdav";
+    $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
     /*$scope.urlBase = "https://clown.isima.fr/clown/remote.php/webdav/";*/
 
     $scope.headerConfig = {
@@ -32,6 +32,17 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
         return $scope.showDelete;
 
+    }
+
+    $scope.onItemDelete = function(item)
+    {
+        $ionicLoading.show(); 
+        $http.delete($scope.urlBase + "/" + $scope.tree.join('/') + '/' + item.name, $scope.headerConfig);
+        $scope.shouldShowDelete();
+        setTimeout(function(){ 
+            $scope.displayTree("/" + $scope.tree.join('/'));
+            $ionicLoading.hide(); 
+        }, 500);
     }
 
 
@@ -153,7 +164,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
     $scope.fileOpener = function (name, path)
     {
         // Set array of extentions
-        textFiles = ["txt", "md", "c", "h", "hpp", "cpp", "java", "conf", "sh", "hxx", "php", "js", "css"];
+        textFiles = ["txt", "md", "c", "h", "hpp", "cpp", "java", "conf", "sh", "hxx", "php", "js", "css", "rtf"];
 
         imgFiles = ["jpg", "JPG", "png", "PNG", "jpeg", "JPEG", "svg"];
 
