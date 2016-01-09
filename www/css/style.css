@@ -1,12 +1,12 @@
 /* CSS */
 
 label{
-	border-radius: 5px !important;
-	margin-bottom: 15px !important;
+    border-radius: 5px !important;
+    margin-bottom: 15px !important;
 }
 
 button{
-	border-radius: 5px !important;
+    border-radius: 5px !important;
 }
 
 /*surcharge des lib CSS ionic.css*/
@@ -24,167 +24,167 @@ button{
 /*style des elements de l'applcation*/
 /*--Regle general-*/
 .center{
-	text-align: center;
+    text-align: center;
 }
 
 /*--Header home.html--*/
 .header{
-	padding: 17px;
-	color: #FFF;
-	background-color: #387EF5;
-	width: 100%;
-	height: auto;
+    padding: 17px;
+    color: #FFF;
+    background-color: #387EF5;
+    width: 100%;
+    height: auto;
 }
 
 #imgProfil{
-	width: 25px;
-	height: 25px;
-	margin-top: 4px;
-	margin-right: 5px;
+    width: 25px;
+    height: 25px;
+    margin-top: 4px;
+    margin-right: 5px;
 }
 
 #imgProfil:hover{
-	opacity: 0.5;
+    opacity: 0.5;
 }
 
 .menuIcon{
-	width: 10%;
-	margin: 13px 3% 0 3%
+    width: 10%;
+    margin: 13px 3% 0 3%
 }
 
 .menuIcon:hover {
-	opacity: 0.5;
+    opacity: 0.5;
 }
 /*--Fin Header home.html--*/
 
 /*--Style calendrier honme.html--*/
 #calendrier{
-	color: #000;
+    color: #000;
 }
 
 #calendrier img{
-	width: 100%;
+    width: 100%;
 }
 /*--Fin Style calendrier honme.html--*/
 
 /*--Style side-menu index.html--*/
 #miniature{
-	width: 25%;
-	margin-left: 38%;
+    width: 25%;
+    margin-left: 38%;
 }
 
 #menuMiniature{
-	margin-top: 20px;
-	width: 25%;
+    margin-top: 20px;
+    width: 25%;
 }
 
 .separateur{
-	width: 75%;
-	height: 1px;
-	margin-top: -20px;
+    width: 75%;
+    height: 1px;
+    margin-top: -20px;
 }
 
 #name{
-	color: #FFF;
-	width: 150px;
-	border-top: 2px solid;
-	padding: 10px 0px 30px 1px;
-	margin-left: 63px;
-	border-radius: 2px;
-	webkit-border-radius: 2px;
+    color: #FFF;
+    width: 150px;
+    border-top: 2px solid;
+    padding: 10px 0px 30px 1px;
+    margin-left: 63px;
+    border-radius: 2px;
+    webkit-border-radius: 2px;
 }
 
 #mentions{
-	text-decoration: none;
-	color: #FFF;
-	position: absolute;
-	bottom: 10px;
-	left: 70px;
+    text-decoration: none;
+    color: #FFF;
+    position: absolute;
+    bottom: 10px;
+    left: 70px;
 }
 /*--Fin Style side-menu index.html--*/
 
 /*--Style cloud.html--*/
 #cloudContent{
-	color: #000;
+    color: #000;
 }
 
 #cloudItem
 {
-	border-color: #387EF5 !important;
-	border-bottom-width: 1px !important;
-	border-bottom-style: solid !important;
-	border-top: none;
-	border-left: none;
-	border-right: none;
-	margin-bottom: 2px;
+    border-color: #387EF5 !important;
+    border-bottom-width: 1px !important;
+    border-bottom-style: solid !important;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 2px;
 }
 
 #cloudItem i
 {
-	height: 50px;
+    height: 50px;
 }
 
 .item-note
 {
-	float: left !important;
-	color: #AAA !important;
-	font-size: 11px !important;
-	margin-left: 18px;
-	margin-top: 3px;
-	font-size: 13px;
+    float: left !important;
+    color: #AAA !important;
+    font-size: 11px !important;
+    margin-left: 18px;
+    margin-top: 3px;
+    font-size: 13px;
 }
 
 #folderTree
 {
-	width: 100%;
-	height: 50px;
-	border: none;
-	-webkit-box-shadow: 0 0 8px 0 #4A4747;
-	box-shadow: 0 0 8px 0 #4A4747;
-	margin-bottom: 15px;
+    width: 100%;
+    height: 50px;
+    border: none;
+    -webkit-box-shadow: 0 0 8px 0 #4A4747;
+    box-shadow: 0 0 8px 0 #4A4747;
+    margin-bottom: 15px;
 }
 
 #folderTree i
 {
-	height: 50px;
-	padding-left: 8px;
+    height: 50px;
+    padding-left: 8px;
 }
 
 #node
 {
-	float: left;
-	margin-left: 5px;
-	margin-top: -3px;
-	font-size: 15px;
+    float: left;
+    margin-left: 5px;
+    margin-top: -3px;
+    font-size: 15px;
 }
 
 #node img
 {
-	margin-top: -3px;
-	position: fixed;
+    margin-top: -3px;
+    position: fixed;
 }
 
 #node span
 {
-	margin-left: 25px;
+    margin-left: 25px;
 }
 
 .nodeItem
 {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 #deleteButton
 {
-	float: right;
-	margin-top: -6px;
-	border: medium none;
+    float: right;
+    margin-top: -6px;
+    border: medium none;
     background-color: #FFF;
 }
 
 #deleteButton img
 {
-	width: 30px;
+    width: 30px;
 }
 
 /*--Fin Style cloud.html--*/
@@ -192,11 +192,11 @@ button{
 
 /*--Style login.html--*/
 #loginContent{
-	background-color: #387EF5;
-	color: #FFF !important;
+    background-color: #387EF5;
+    color: #FFF !important;
 }
 
 .menuIconLogin{
-	width: 27%;
-	margin: 35px 0% 40px;
+    width: 27%;
+    margin: 35px 0% 40px;
 }
