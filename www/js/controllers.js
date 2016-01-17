@@ -1,6 +1,6 @@
 appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
 
-    $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
+    $scope.urlBase = "http://192.168.1.25/owncloud/remote.php/webdav";
     /*$scope.urlBase = "https://clown.isima.fr/clown/remote.php/webdav/";*/
 
     $scope.headerConfig = {
@@ -9,6 +9,11 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
             /*'Authorization': 'Basic Y2hpbmlhdWc6NTMyOTUzMjk='*/
         }
     };
+
+
+    $scope.tree = [];
+
+    $scope.resizedTree = [];
 
     // init of the cloud controller
     $scope.init = function(){
@@ -69,7 +74,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
     $scope.webDavRequest = function(type, name){
     
-        if (type == "Collection") {
+        // if its a folder and not a shorted tree node
+        if (type == "Collection" && name != "...") {
 
             // Maj the tree bar
             $scope.goToNode(name);
@@ -77,7 +83,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
             // display the content of the folder
             $scope.displayTree(name);
         }
-        else
+        // if its a file and not a shorted tree node
+        else if (name != "...")
         {
             // show confirm box and download the file
             $scope.showConfirm(name);
@@ -87,10 +94,14 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
     $scope.displayTree = function (name) {
 
-        if (name != '/')
+        if (name != '/'){
             name = "/" + $scope.tree.join('/');
+        }
         else
+        {
             $scope.tree = [];
+            $scope.resizedTree = [];
+        }
 
         $http.get($scope.urlBase + name, $scope.headerConfig).then(function (response) {
             $scope.arrayItems = htmlToJsonParser(response.data);
@@ -98,11 +109,9 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
         }, function (error) {
 
             // change and use ionic popup to show errors
-            alert(error);
+            alert("Resqest fail on : \"" + error.config.url + "\" check your internet connetion or maybe your cloud provider is not reachable.");
         });
     }
-
-    $scope.tree = [];
 
     $scope.goToNode = function (node) {
 
@@ -113,6 +122,13 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
             if (node == $scope.tree[i])
             {
                 $scope.tree.splice(i + 1);
+
+                $scope.resizedTree = [];
+                //$scope.resizedTree = $scope.tree;
+                for(var j = 0; j<$scope.tree.length; ++j)
+                    $scope.resizedTree[j] = $scope.tree[j];
+
+                $scope.resizeTree();
                 find = true;
                 break;
             }
@@ -121,6 +137,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
         if(!find)
         {
             $scope.tree.push(node);
+            $scope.resizedTree.push(node);
+            $scope.resizeTree();
         }
 
     }
@@ -168,6 +186,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
         imgFiles = ["jpg", "JPG", "png", "PNG", "jpeg", "JPEG", "svg"];
 
+        mediaFiles = ["mp3", "MP3", "avi", "AVI", "mp4", "MP4", "flv", "FLV", "mkv", "wma", "wmv" ];
+
         name = name.split(".");
 
         var ext = name[name.length-1];
@@ -202,6 +222,11 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
             // go to imgReader
             $state.go('side.imgReader', { img: path});
         }
+        else if (mediaFiles.indexOf(ext) > -1)
+        {
+            // the media files aren't supported by the application yet ...
+            alert("This media files are not supported by the application yet, but your file have been saved to your Download folder. ")
+        }
         else
         {
 
@@ -215,8 +240,35 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
                 alert('You haven\'t the default application to open this file. It was saved to your \'Download\' folder.');
             });
         }
-
     };
+
+    $scope.resizeTree = function ()
+    {
+        var treeStringLength = 0;
+
+        for(var i = 0; i < $scope.resizedTree.length; ++i)
+        {
+            treeStringLength += $scope.resizedTree[i].length;
+        }
+
+        if(treeStringLength > 20)
+        {
+            while(treeStringLength > 20)
+            {
+                if($scope.resizedTree.indexOf("...") != -1)
+                {
+                    // we cut the 2nd element to shorten the displayed tree
+                    treeStringLength -= $scope.resizedTree[1].length;
+                    $scope.resizedTree.splice(1,1);
+                }
+                else
+                {
+                    $scope.resizedTree[0] = "...";
+                }
+                
+            }
+        }
+    }
 
 
     // Class Item to each file/folder read by a parser when GET request is performed
