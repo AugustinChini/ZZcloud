@@ -1,6 +1,6 @@
 appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
 
-    $scope.urlBase = "http://192.168.1.25/owncloud/remote.php/webdav";
+    $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
     /*$scope.urlBase = "https://clown.isima.fr/clown/remote.php/webdav/";*/
 
     $scope.headerConfig = {
