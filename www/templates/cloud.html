@@ -22,11 +22,8 @@
                         {{item.date.day+'/'+item.date.month+'/'+item.date.year}} - {{item.size}}o
                     </span>
 
-                    <ion-option-button class="button-positive">
+                    <ion-option-button class="button-positive" ng-click="shareItem(item)">
                       Share
-                    </ion-option-button>
-                    <ion-option-button class="button-assertive">
-                      Edit
                     </ion-option-button>
 
                     <ion-delete-button ng-click="onItemDelete(item)" class="ion-minus-circled"></ion-delete-button>

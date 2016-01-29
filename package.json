@@ -17,7 +17,6 @@
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",
-    "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard",
     "org.apache.cordova.file-transfer",
@@ -25,9 +24,32 @@
     {
       "locator": "https://github.com/pwlin/cordova-plugin-file-opener2.git",
       "id": "cordova-plugin-file-opener2"
+    },
+    {
+      "locator": "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+      "id": "cordova-plugin-x-socialsharing"
+    },
+    "cordova-plugin-contacts",
+    {
+      "locator": "https://github.com/apache/cordova-plugin-whitelist.git",
+      "id": "cordova-plugin-whitelist"
     }
   ],
   "cordovaPlatforms": [
     "android"
-  ]
+  ],
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://AugustinChini:saucisse<3@github.com/AugustinChini/ZZcloud.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AugustinChini/ZZcloud/issues"
+  },
+  "homepage": "https://github.com/AugustinChini/ZZcloud#readme"
 }

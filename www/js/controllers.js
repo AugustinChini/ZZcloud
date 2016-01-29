@@ -1,15 +1,22 @@
-appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFileTransfer, $cordovaFileOpener2) {
+appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
 
-    $scope.urlBase = "http://achini.ddns.net/owncloud/remote.php/webdav";
+    // object which incude all the login informations
+    $scope.login = {
+        "url": 'http://achini.ddns.net/owncloud/remote.php/webdav',
+        "username": "augustin",
+        "password": "saucisse<3"
+    };
+
+
+    $scope.urlBase = $scope.login.url;
+    /*http://achini.ddns.net/owncloud/remote.php/webdav*/
     /*$scope.urlBase = "https://clown.isima.fr/clown/remote.php/webdav/";*/
 
     $scope.headerConfig = {
         headers: {
-            'Authorization': 'Basic YXVndXN0aW46c2F1Y2lzc2U8Mw=='
-            /*'Authorization': 'Basic Y2hpbmlhdWc6NTMyOTUzMjk='*/
+            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password)
         }
     };
-
 
     $scope.tree = [];
 
@@ -50,6 +57,31 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
         }, 500);
     }
 
+
+    $scope.shareItem = function (item)
+    {
+          // An elaborate, custom popup
+        var sharePopup = $ionicPopup.show({
+        template: '<div style="text-align: center;"><p><button style="margin-right: 5px; height:40px" class="button button-balanced"><img style="width:45px; margin-bottom:-10px;" src="img/sms.png"/></button><button style="margin-right: 5px;height:40px;" class="button button-positive"><img style="width:45px; margin-bottom:-10px;" src="img/mail.png"/></p></div>',
+        title: 'Partager le fichier',
+        subTitle: 'Le lien de partage owncloud peut être envoyé par :',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Share</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+
+            }
+          }
+        ]
+        });
+
+        $timeout(function() {
+            sharePopup.close(); //close the popup after 3 seconds for some reason
+        }, 3000);
+    }
 
     // confirm dialog
     $scope.showConfirm = function(name) {
@@ -109,7 +141,9 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
         }, function (error) {
 
             // change and use ionic popup to show errors
-            alert("Resqest fail on : \"" + error.config.url + "\" check your internet connetion or maybe your cloud provider is not reachable.");
+            /*alert("Resqest fail on : \"" + error.config.url + "\" check your internet connetion or maybe your cloud provider is not reachable.");*/
+            alert(JSON.stringify(error));
+
         });
     }
 
@@ -378,4 +412,58 @@ appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
     }
 
     $scope.init();
+});
+
+appZZcloud.controller('loginController', function ($scope, $state, $http, $cordovaFileTransfer, $cordovaFile) {
+
+   /*document.addEventListener("deviceready", function() {
+        var path = cordova.file.applicationStorageDirectory;
+
+        $cordovaFile.checkFile(path, "login.json")
+        .then(function (success) {
+            // success
+          }, function (error) {
+            // error
+          });
+
+
+
+        if(!) {
+            $scope.checkLogin = function($url, $username, $password) {
+                */$scope.login = {
+                    "url": 'http://achini.ddns.net/owncloud/remote.php/webdav',
+                    "username": "augustin",
+                    "password": "saucisse<3"
+                };/*
+
+                $scope.headerConfig = {
+                    headers: {
+                        'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password)
+                    }
+                };
+
+                $http.get($scope.login.url, $scope.headerConfig)
+                    .then(function (response) {
+                        writeFileJson();
+                        $state.go("side.home");
+                    }, function (error) {
+                        // change and use ionic popup to show errors
+                        alert("Erreur à l'identification !");
+                });
+
+                function writeFileJson() {
+                    $cordovaFile.writeFile(path, "login.json", JSON.stringify($scope.login), true)
+                }
+            }
+        }
+        else
+        {
+            $scope.login = JSON.parse($cordovaFile.readAsText(cordova.file.applicationStorageDirectory,"login.json"));
+            */$state.go("side.home");/*
+        }
+    });*/
+
+appZZcloud.controller('shareController', function ($scope) {
+    });
+
 });

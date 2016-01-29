@@ -55,6 +55,16 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider, hljsServiceProvid
       }
     });
 
+    $stateProvider.state('side.share', {
+      url: "/share",
+      views: {
+        'share-side': {
+          templateUrl: "templates/share.html",
+          controller: 'shareController'
+        }
+      }
+    });
+
     $stateProvider.state('side.calendar', {
       url: "/calendar",
       views: {
@@ -109,7 +119,8 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider, hljsServiceProvid
       url: "/login",
       views: {
         'container-login': {
-          templateUrl: "templates/login.html"
+          templateUrl: "templates/login.html",
+          controller: "loginController"
         }
       }
     });

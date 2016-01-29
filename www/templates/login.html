@@ -4,15 +4,17 @@
             <img class="menuIconLogin" src="img/zzCloudblanc.png">
             <form>
                 <label class="item item-input">
-                    <input type="text" placeholder="Addresse du serveur Owncloud">
+                    <input type="text" placeholder="Addresse du serveur Owncloud" ng-model="url">
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Identifiant ISIMA">
+                    <input type="text" placeholder="Identifiant ISIMA"
+                    ng-model="username">
                 </label>
                 <label class="item item-input">
-                    <input type="password" placeholder="Mot de passe">
+                    <input type="password" placeholder="Mot de passe"
+                    ng-model="password">
                 </label>
-                <button class="button button-block button-positive" ui-sref="side.home">Valider</button>
+                <button class="button button-block button-positive" ng-click="checkLogin(url, username, password)">Valider</button>
             </form>
         </div>
     </ion-content>
