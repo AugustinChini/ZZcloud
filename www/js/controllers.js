@@ -1,8 +1,8 @@
-appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
+appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, $cordovaSocialSharing) {
 
     // object which incude all the login informations
     $scope.login = {
-        "url": 'http://achini.ddns.net/owncloud/remote.php/webdav',
+        "url": 'http://192.168.1.25/owncloud/remote.php/webdav',
         "username": "augustin",
         "password": "saucisse<3"
     };
@@ -14,7 +14,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
     $scope.headerConfig = {
         headers: {
-            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password)
+            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
     };
 
@@ -60,27 +61,55 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
     $scope.shareItem = function (item)
     {
-          // An elaborate, custom popup
-        var sharePopup = $ionicPopup.show({
-        template: '<div style="text-align: center;"><p><button style="margin-right: 5px; height:40px" class="button button-balanced"><img style="width:45px; margin-bottom:-10px;" src="img/sms.png"/></button><button style="margin-right: 5px;height:40px;" class="button button-positive"><img style="width:45px; margin-bottom:-10px;" src="img/mail.png"/></p></div>',
-        title: 'Partager le fichier',
-        subTitle: 'Le lien de partage owncloud peut être envoyé par :',
-        scope: $scope,
-        buttons: [
-          { text: 'Cancel' },
-          {
-            text: '<b>Share</b>',
-            type: 'button-positive',
-            onTap: function(e) {
-
-            }
-          }
-        ]
-        });
+           var sharePopup = $ionicPopup.show({
+                title: 'Share Link',
+                template: 'Send link by ...',
+                cancelType: 'button-balanced',
+                okType: 'button-positive',
+                buttons: [
+                    {
+                        text: 'SMS',
+                        type: 'button-balanced',
+                        onTap: function(e) {
+                            e.preventDefault();
+                            $scope.getShareLink(item.link);
+                            sharePopup.close();
+                        }
+                    },
+                    {
+                        text: '<b>eMail</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            e.preventDefault();
+                            console.log("mail");
+                            sharePopup.close();
+                        }
+                    }
+                ]
+           });
 
         $timeout(function() {
             sharePopup.close(); //close the popup after 3 seconds for some reason
         }, 3000);
+    }
+
+    $scope.getShareLink = function (link) {
+
+        link = link.split("webdav");
+        link = link[1];
+        link = "ISIMA/CCNA.txt"
+
+        var option = {path: link, shareType: 3};
+
+        $http.post("http://192.168.1.25/owncloud/ocs/v1.php/apps/files_sharing/api/v1/shares", "path=ISIMA/CCNA.txt&shareType=3" ,$scope.headerConfig).then(function (response) {
+
+            alert(JSON.stringify(response));            
+
+        }, function (error) {
+
+            alert(JSON.stringify(error));
+
+        });
     }
 
     // confirm dialog
