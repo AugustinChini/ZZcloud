@@ -1,0 +1,18 @@
+<ion-view view-title="Share documents">
+    <ion-content class="padding">
+        <div class="list list-inset">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Search">
+            </label>
+        </div>
+
+        <ion-list>
+            <ion-item ng-repeat="contact in contacts">
+                {{contact.displayName}}
+            </ion-item>
+        </ion-list>
+
+
+    </ion-content>
+</ion-view>

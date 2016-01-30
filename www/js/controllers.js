@@ -2,6 +2,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
     // object which incude all the login informations
     $scope.login = {
+        "urlBase": 'http://192.168.1.25',
         "url": 'http://192.168.1.25/owncloud/remote.php/webdav',
         "username": "augustin",
         "password": "saucisse<3"
@@ -9,8 +10,6 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
 
     $scope.urlBase = $scope.login.url;
-    /*http://achini.ddns.net/owncloud/remote.php/webdav*/
-    /*$scope.urlBase = "https://clown.isima.fr/clown/remote.php/webdav/";*/
 
     $scope.headerConfig = {
         headers: {
@@ -72,8 +71,9 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
                         type: 'button-balanced',
                         onTap: function(e) {
                             e.preventDefault();
-                            $scope.getShareLink(item.link);
+                            //$scope.getShareLink(item.link);
                             sharePopup.close();
+                            $state.go('side.share', { type: "sms"});
                         }
                     },
                     {
@@ -81,7 +81,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
                         type: 'button-positive',
                         onTap: function(e) {
                             e.preventDefault();
-                            console.log("mail");
+                            //$scope.getShareLink(item.link);
+                            $state.go('side.share', { type: "email"});
                             sharePopup.close();
                         }
                     }
@@ -97,17 +98,20 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
         link = link.split("webdav");
         link = link[1];
-        link = "ISIMA/CCNA.txt"
 
-        var option = {path: link, shareType: 3};
+        $http.post($scope.login.urlBase + "/owncloud/ocs/v1.php/apps/files_sharing/api/v1/shares", "path=" + link + "&shareType=3" ,$scope.headerConfig).then(function (response) {
 
-        $http.post("http://192.168.1.25/owncloud/ocs/v1.php/apps/files_sharing/api/v1/shares", "path=ISIMA/CCNA.txt&shareType=3" ,$scope.headerConfig).then(function (response) {
+            var resp = JSON.stringify(response);
+            resp = resp.split("<token>");
+            resp = resp[1].split("</token>");
+            resp = resp[0];
 
-            alert(JSON.stringify(response));            
+
+
 
         }, function (error) {
 
-            alert(JSON.stringify(error));
+            alert(error.message);
 
         });
     }
@@ -443,6 +447,40 @@ appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
     $scope.init();
 });
 
+appZZcloud.controller('shareController', function ($scope, $stateParams, $cordovaContacts) {
+    
+    $scope.findContactsBySearchTerm = function (searchTerm) {
+
+        function onSuccess(contacts) {
+            $scope.contacts = contacts;
+        };
+
+        function onError(contactError) {
+            alert('Error!');
+        };
+
+        // find all contacts with 'Bob' in any name field
+        var options      = new ContactFindOptions();
+        options.filter   = "Au";
+        options.multiple = true;
+        options.desiredFields = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers, navigator.contacts.fieldType.emails, navigator.contacts.fieldType.photos];
+        var fields       = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
+        navigator.contacts.find(fields, onSuccess, onError, options);
+
+    };
+
+    $scope.init = function(){
+
+        $scope.findContactsBySearchTerm("Augustin");
+
+        //alert(JSON.stringify($scope.contacts));
+
+    }
+
+    $scope.init();
+
+});
+
 appZZcloud.controller('loginController', function ($scope, $state, $http, $cordovaFileTransfer, $cordovaFile) {
 
    /*document.addEventListener("deviceready", function() {
@@ -491,8 +529,5 @@ appZZcloud.controller('loginController', function ($scope, $state, $http, $cordo
             */$state.go("side.home");/*
         }
     });*/
-
-appZZcloud.controller('shareController', function ($scope) {
-    });
 
 });

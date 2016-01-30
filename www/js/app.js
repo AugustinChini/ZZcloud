@@ -55,16 +55,6 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider, hljsServiceProvid
       }
     });
 
-    $stateProvider.state('side.share', {
-      url: "/share",
-      views: {
-        'share-side': {
-          templateUrl: "templates/share.html",
-          controller: 'shareController'
-        }
-      }
-    });
-
     $stateProvider.state('side.calendar', {
       url: "/calendar",
       views: {
@@ -100,6 +90,17 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider, hljsServiceProvid
         'home-side': {
           templateUrl: "templates/textReader.html",
           controller: "textReaderController"
+        }
+      }
+    });
+
+    $stateProvider.state('side.share', {
+      url: "/share",
+      params: {'type': 'sms'},
+      views: {
+        'home-side': {
+          templateUrl: "templates/share.html",
+          controller: "shareController"
         }
       }
     });
