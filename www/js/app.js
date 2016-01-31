@@ -96,7 +96,7 @@ appZZcloud.config(function($stateProvider, $urlRouterProvider, hljsServiceProvid
 
     $stateProvider.state('side.share', {
       url: "/share",
-      params: {'type': 'sms'},
+      params: {'type': 'sms', 'path': 'undefined'},
       views: {
         'home-side': {
           templateUrl: "templates/share.html",

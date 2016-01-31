@@ -1,4 +1,4 @@
-appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, $cordovaSocialSharing) {
+appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
 
     // object which incude all the login informations
     $scope.login = {
@@ -73,7 +73,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
                             e.preventDefault();
                             //$scope.getShareLink(item.link);
                             sharePopup.close();
-                            $state.go('side.share', { type: "sms"});
+                            $state.go('side.share', { type: "sms", path: item.link});
                         }
                     },
                     {
@@ -82,7 +82,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
                         onTap: function(e) {
                             e.preventDefault();
                             //$scope.getShareLink(item.link);
-                            $state.go('side.share', { type: "email"});
+                            $state.go('side.share', { type: "email", path: item.link});
                             sharePopup.close();
                         }
                     }
@@ -92,28 +92,6 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
         $timeout(function() {
             sharePopup.close(); //close the popup after 3 seconds for some reason
         }, 3000);
-    }
-
-    $scope.getShareLink = function (link) {
-
-        link = link.split("webdav");
-        link = link[1];
-
-        $http.post($scope.login.urlBase + "/owncloud/ocs/v1.php/apps/files_sharing/api/v1/shares", "path=" + link + "&shareType=3" ,$scope.headerConfig).then(function (response) {
-
-            var resp = JSON.stringify(response);
-            resp = resp.split("<token>");
-            resp = resp[1].split("</token>");
-            resp = resp[0];
-
-
-
-
-        }, function (error) {
-
-            alert(error.message);
-
-        });
     }
 
     // confirm dialog
@@ -447,9 +425,31 @@ appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
     $scope.init();
 });
 
-appZZcloud.controller('shareController', function ($scope, $stateParams, $cordovaContacts) {
+appZZcloud.controller('shareController', function ($scope, $stateParams, $http, $cordovaContacts, $cordovaSocialSharing) {
+    
+    // object which incude all the login informations ------>temp
+    $scope.login = {
+        "urlBase": 'http://192.168.1.25/owncloud/',
+        "url": 'http://192.168.1.25/owncloud/remote.php/webdav',
+        "username": "augustin",
+        "password": "saucisse<3"
+    };
+
+
+    $scope.urlBase = $scope.login.url;
+
+    $scope.headerConfig = {
+        headers: {
+            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+
+
+    $scope.shareType = $stateParams.type;
     
     $scope.findContactsBySearchTerm = function (searchTerm) {
+
 
         function onSuccess(contacts) {
             $scope.contacts = contacts;
@@ -461,7 +461,7 @@ appZZcloud.controller('shareController', function ($scope, $stateParams, $cordov
 
         // find all contacts with 'Bob' in any name field
         var options      = new ContactFindOptions();
-        options.filter   = "Au";
+        options.filter   = searchTerm;
         options.multiple = true;
         options.desiredFields = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers, navigator.contacts.fieldType.emails, navigator.contacts.fieldType.photos];
         var fields       = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
@@ -469,15 +469,53 @@ appZZcloud.controller('shareController', function ($scope, $stateParams, $cordov
 
     };
 
-    $scope.init = function(){
+    $scope.openShareApp = function(id) {
 
-        $scope.findContactsBySearchTerm("Augustin");
+        var link = $scope.getShareLink($stateParams.path);
 
-        //alert(JSON.stringify($scope.contacts));
+        if($scope.shareType == 'sms' && link != "error")
+        {
+            $cordovaSocialSharing.shareViaSMS(link, id)
+            .then(function(result) {
+            }, function(err) {
+                alert(JSON.stringify(err));
+            });
+        }
+        else if ($scope.shareType == "email" && link != "error")
+        {
+            $cordovaSocialSharing.shareViaEmail(link, "share Item", id)
+            .then(function(result) {
+            }, function(err) {
+                alert(JSON.stringify(err));
+            });
+        }
 
     }
 
-    $scope.init();
+    $scope.getShareLink = function (link) {
+
+        link = link.split("webdav");
+        link = link[1];
+
+        $http.post($scope.login.urlBase + "ocs/v1.php/apps/files_sharing/api/v1/shares", "path=" + link + "&shareType=3" ,$scope.headerConfig)
+        .then(function (response) {
+
+            var resp = JSON.stringify(response);
+            resp = resp.split("<token>");
+            resp = resp[1].split("</token>");
+            link = resp[0];
+
+            // format url to the API rules
+            return $scope.login.urlBase+"index.php/s/"+link;
+
+        }, function (error) {
+
+            alert(JSON.stringify(error));
+            return "error";
+
+        });
+
+    }
 
 });
 

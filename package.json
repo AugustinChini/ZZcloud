@@ -33,6 +33,10 @@
     {
       "locator": "https://github.com/apache/cordova-plugin-whitelist.git",
       "id": "cordova-plugin-whitelist"
+    },
+    {
+      "locator": "https://github.com/wymsee/cordova-HTTP.git",
+      "id": "com.synconset.cordovaHTTP"
     }
   ],
   "cordovaPlatforms": [

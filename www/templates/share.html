@@ -3,16 +3,29 @@
         <div class="list list-inset">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="Search">
+                <input ng-model="searchLabel" ng-change="findContactsBySearchTerm(searchLabel)" type="text" placeholder="Search">
             </label>
         </div>
 
-        <ion-list>
-            <ion-item ng-repeat="contact in contacts">
-                {{contact.displayName}}
-            </ion-item>
-        </ion-list>
+        <div class="list">
 
+            <div ng-repeat="contact in contacts">
+                <a ng-if="shareType == 'email'" ng-click="openShareApp(contact.emails[0].value)" class="item item-avatar" href="#">
+                    <img ng-src="{{contact.photos[0].value}}">
+                    <h2>{{contact.displayName}}</h2>
+                    <p ng-if="contact.emails.length != 0" >{{contact.emails[0].value}}</p>
+                </a>
+            </div>
+
+            <div ng-repeat="contact in contacts">
+                <a ng-if="shareType == 'sms'" ng-click="openShareApp(contact.phoneNumbers[0].value)"  class="item item-avatar" href="#">
+                    <img ng-src="{{contact.photos[0].value}}">
+                    <h2>{{contact.displayName}}</h2>
+                    <p ng-if="contact.phoneNumbers.lenght != 0">{{contact.phoneNumbers[0].value}}</p>
+                </a>
+            </div>
+
+        </div>
 
     </ion-content>
 </ion-view>
