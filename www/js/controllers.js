@@ -1,22 +1,6 @@
-appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
+appZZcloud.controller('cloudController', function ($rootScope, $scope, $state, $http, $ionicScrollDelegate, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
 
-    // object which incude all the login informations
-    $scope.login = {
-        "urlBase": 'http://192.168.1.25',
-        "url": 'http://192.168.1.25/owncloud/remote.php/webdav',
-        "username": "augustin",
-        "password": "saucisse<3"
-    };
-
-
-    $scope.urlBase = $scope.login.url;
-
-    $scope.headerConfig = {
-        headers: {
-            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
+    $scope.urlBase = $rootScope.login.url;
 
     $scope.tree = [];
 
@@ -49,7 +33,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
     $scope.onItemDelete = function(item)
     {
         $ionicLoading.show(); 
-        $http.delete($scope.urlBase + "/" + $scope.tree.join('/') + '/' + item.name, $scope.headerConfig);
+        $http.delete($scope.urlBase + "/" + $scope.tree.join('/') + '/' + item.name, $rootScope.headerConfig);
         $scope.shouldShowDelete();
         setTimeout(function(){ 
             $scope.displayTree("/" + $scope.tree.join('/'));
@@ -116,6 +100,8 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
      */
 
     $scope.webDavRequest = function(type, name){
+
+        $ionicLoading.show();
     
         // if its a folder and not a shorted tree node
         if (type == "Collection" && name != "...") {
@@ -125,6 +111,9 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
 
             // display the content of the folder
             $scope.displayTree(name);
+
+            $ionicLoading.hide();
+
         }
         // if its a file and not a shorted tree node
         else if (name != "...")
@@ -146,7 +135,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
             $scope.resizedTree = [];
         }
 
-        $http.get($scope.urlBase + name, $scope.headerConfig).then(function (response) {
+        $http.get($scope.urlBase + name, $rootScope.headerConfig).then(function (response) {
             $scope.arrayItems = htmlToJsonParser(response.data);
             $ionicScrollDelegate.scrollTop(true);
         }, function (error) {
@@ -198,7 +187,7 @@ appZZcloud.controller('cloudController', function ($scope, $state, $http, $ionic
             var targetPath = cordova.file.externalRootDirectory + "Download/" + name;
             var trustHosts = true;
 
-            $cordovaFileTransfer.download(url+'/'+name, targetPath, $scope.headerConfig, trustHosts)
+            $cordovaFileTransfer.download(url+'/'+name, targetPath, $rootScope.headerConfig, trustHosts)
             .then(function(result) {
 
                 setTimeout(function(){ $ionicLoading.hide(); }, 300);
@@ -425,30 +414,14 @@ appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
     $scope.init();
 });
 
-appZZcloud.controller('shareController', function ($scope, $stateParams, $http, $cordovaContacts, $cordovaSocialSharing) {
-    
-    // object which incude all the login informations ------>temp
-    $scope.login = {
-        "urlBase": 'http://192.168.1.25/owncloud/',
-        "url": 'http://192.168.1.25/owncloud/remote.php/webdav',
-        "username": "augustin",
-        "password": "saucisse<3"
-    };
-
-
-    $scope.urlBase = $scope.login.url;
-
-    $scope.headerConfig = {
-        headers: {
-            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-
+appZZcloud.controller('shareController', function ($rootScope, $scope, $stateParams, $http, $cordovaContacts, $cordovaSocialSharing) {
 
     $scope.shareType = $stateParams.type;
     
     $scope.findContactsBySearchTerm = function (searchTerm) {
+
+        var link = $scope.getShareLink($stateParams.path);
+
 
 
         function onSuccess(contacts) {
@@ -497,7 +470,8 @@ appZZcloud.controller('shareController', function ($scope, $stateParams, $http, 
         link = link.split("webdav");
         link = link[1];
 
-        $http.post($scope.login.urlBase + "ocs/v1.php/apps/files_sharing/api/v1/shares", "path=" + link + "&shareType=3" ,$scope.headerConfig)
+        //$http.post($rootScope.login.urlBase + "ocs/v1.php/apps/files_sharing/api/v1/shares", "path=" + link + "&shareType=3" ,$rootScope.headerConfig)
+        $http.post("http://achini.ddns.net/owncloud/getLink.php", "path=" + link + "&shareType=3" ,$rootScope.headerConfig)
         .then(function (response) {
 
             var resp = JSON.stringify(response);
@@ -506,7 +480,7 @@ appZZcloud.controller('shareController', function ($scope, $stateParams, $http, 
             link = resp[0];
 
             // format url to the API rules
-            return $scope.login.urlBase+"index.php/s/"+link;
+            return $rootScope.login.urlBase+"index.php/s/"+link;
 
         }, function (error) {
 
@@ -519,35 +493,51 @@ appZZcloud.controller('shareController', function ($scope, $stateParams, $http, 
 
 });
 
-appZZcloud.controller('loginController', function ($scope, $state, $http, $cordovaFileTransfer, $cordovaFile) {
+appZZcloud.controller('loginController', function ($rootScope, $scope, $state, $http, $cordovaFileTransfer, $cordovaFile) {
 
-   /*document.addEventListener("deviceready", function() {
+    document.addEventListener("deviceready", function() {
+
         var path = cordova.file.applicationStorageDirectory;
 
         $cordovaFile.checkFile(path, "login.json")
         .then(function (success) {
-            // success
-          }, function (error) {
-            // error
-          });
-
-
-
-        if(!) {
-            $scope.checkLogin = function($url, $username, $password) {
-                */$scope.login = {
-                    "url": 'http://achini.ddns.net/owncloud/remote.php/webdav',
-                    "username": "augustin",
-                    "password": "saucisse<3"
-                };/*
-
-                $scope.headerConfig = {
+            //$rootScope.login = JSON.parse($cordovaFile.readAsText(cordova.file.applicationStorageDirectory,"login.json"));
+            $cordovaFile.readAsText(path,"login.json")
+            .then(function (string) {
+                $rootScope.login = JSON.parse(string);
+                $rootScope.headerConfig = {
                     headers: {
-                        'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password)
+                        'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                };
+                $state.go("side.home");
+                
+            }, function (error) {
+
+                alert(JSON.stringify(error));
+    
+            });
+
+        }, function (error) {
+
+            alert(JSON.stringify(error));
+
+            $scope.checkLogin = function(url, username, password) {
+                $rootScope.login = {
+                    "url": url,
+                    "username": username,
+                    "password": password
+                };
+
+                $rootScope.headerConfig = {
+                    headers: {
+                        'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 };
 
-                $http.get($scope.login.url, $scope.headerConfig)
+                $http.get($scope.login.url, $rootScope.headerConfig)
                     .then(function (response) {
                         writeFileJson();
                         $state.go("side.home");
@@ -557,15 +547,12 @@ appZZcloud.controller('loginController', function ($scope, $state, $http, $cordo
                 });
 
                 function writeFileJson() {
-                    $cordovaFile.writeFile(path, "login.json", JSON.stringify($scope.login), true)
+                    $cordovaFile.writeFile(path, "login.json", JSON.stringify($rootScope.login), true)
                 }
             }
-        }
-        else
-        {
-            $scope.login = JSON.parse($cordovaFile.readAsText(cordova.file.applicationStorageDirectory,"login.json"));
-            */$state.go("side.home");/*
-        }
-    });*/
+
+        });
+
+    });
 
 });
