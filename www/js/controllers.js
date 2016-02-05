@@ -119,6 +119,7 @@ appZZcloud.controller('cloudController', function ($rootScope, $scope, $state, $
         else if (name != "...")
         {
             // show confirm box and download the file
+            $ionicLoading.hide();
             $scope.showConfirm(name);
 
         }
@@ -414,15 +415,11 @@ appZZcloud.controller('textReaderController', function ($scope, $stateParams) {
     $scope.init();
 });
 
-appZZcloud.controller('shareController', function ($rootScope, $scope, $stateParams, $http, $cordovaContacts, $cordovaSocialSharing) {
+appZZcloud.controller('shareController', function ($rootScope, $scope, $stateParams, $http, $cordovaContacts, $cordovaSocialSharing, $ionicLoading) {
 
     $scope.shareType = $stateParams.type;
     
     $scope.findContactsBySearchTerm = function (searchTerm) {
-
-        var link = $scope.getShareLink($stateParams.path);
-
-
 
         function onSuccess(contacts) {
             $scope.contacts = contacts;
@@ -444,34 +441,19 @@ appZZcloud.controller('shareController', function ($rootScope, $scope, $statePar
 
     $scope.openShareApp = function(id) {
 
-        var link = $scope.getShareLink($stateParams.path);
+        $ionicLoading.show();
 
-        if($scope.shareType == 'sms' && link != "error")
-        {
-            $cordovaSocialSharing.shareViaSMS(link, id)
-            .then(function(result) {
-            }, function(err) {
-                alert(JSON.stringify(err));
-            });
-        }
-        else if ($scope.shareType == "email" && link != "error")
-        {
-            $cordovaSocialSharing.shareViaEmail(link, "share Item", id)
-            .then(function(result) {
-            }, function(err) {
-                alert(JSON.stringify(err));
-            });
-        }
+        $scope.getShareLink($stateParams.path, id);
 
     }
 
-    $scope.getShareLink = function (link) {
+    $scope.getShareLink = function (link, id) {
 
         link = link.split("webdav");
         link = link[1];
 
         //$http.post($rootScope.login.urlBase + "ocs/v1.php/apps/files_sharing/api/v1/shares", "path=" + link + "&shareType=3" ,$rootScope.headerConfig)
-        $http.post("http://achini.ddns.net/owncloud/getLink.php", "path=" + link + "&shareType=3" ,$rootScope.headerConfig)
+        $http.get("http://achini.ddns.net/getLink.php?path="+link)
         .then(function (response) {
 
             var resp = JSON.stringify(response);
@@ -479,13 +461,33 @@ appZZcloud.controller('shareController', function ($rootScope, $scope, $statePar
             resp = resp[1].split("</token>");
             link = resp[0];
 
+            var urlBase = "http://"+($rootScope.login.url).split("/")[2];
+
             // format url to the API rules
-            return $rootScope.login.urlBase+"index.php/s/"+link;
+            link = urlBase+"/owncloud/index.php/s/"+link;
+
+            $ionicLoading.hide();
+
+            if($scope.shareType == 'sms' && link != "error")
+            {
+                $cordovaSocialSharing.shareViaSMS(link, id)
+                .then(function(result) {
+                }, function(err) {
+                    alert(JSON.stringify(err));
+                });
+            }
+            else if ($scope.shareType == "email" && link != "error")
+            {
+                $cordovaSocialSharing.shareViaEmail(link, "share Item", id)
+                .then(function(result) {
+                }, function(err) {
+                    alert(JSON.stringify(err));
+                });
+            }
 
         }, function (error) {
 
             alert(JSON.stringify(error));
-            return "error";
 
         });
 
@@ -494,6 +496,23 @@ appZZcloud.controller('shareController', function ($rootScope, $scope, $statePar
 });
 
 appZZcloud.controller('loginController', function ($rootScope, $scope, $state, $http, $cordovaFileTransfer, $cordovaFile) {
+
+    /*// debug 
+    $rootScope.login = {
+        "url": "http://achini.ddns.net/owncloud/remote.php/webdav/",
+        "username": "augustin",
+        "password": "saucisse<3"
+    };
+
+    $rootScope.headerConfig = {
+        headers: {
+            'Authorization': 'Basic '+btoa($scope.login.username+':'+$scope.login.password),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+
+    $state.go("side.home");*/
+
 
     document.addEventListener("deviceready", function() {
 
@@ -520,8 +539,6 @@ appZZcloud.controller('loginController', function ($rootScope, $scope, $state, $
             });
 
         }, function (error) {
-
-            alert(JSON.stringify(error));
 
             $scope.checkLogin = function(url, username, password) {
                 $rootScope.login = {
